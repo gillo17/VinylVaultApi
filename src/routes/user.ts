@@ -11,7 +11,7 @@ router.post('/createUser', (req, res) => {
     userController.createUser(req, res);
 });
 
-router.get('/accountLogin', (req, res) => {
+router.post('/accountLogin', (req, res) => {
     userController.accountLogin(req, res);
 });
 
