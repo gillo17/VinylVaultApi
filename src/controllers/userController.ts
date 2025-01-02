@@ -3,19 +3,28 @@ import { UserMappers } from '../mappers/userMappers';
 import { UserService } from '../services/userService';
 import Types from '../types';
 import { injectable, inject } from 'inversify';
-import Logging from '../utils/Logging';
+import { UserValidator } from '../validators/userValidator';
 
 @injectable()
 export class UserController {
     public constructor(
         @inject(Types.UserMappers) private userMappers: UserMappers,
-        @inject(Types.UserService) private userService: UserService
+        @inject(Types.UserService) private userService: UserService,
+        @inject(Types.UserValidator) private userValidator: UserValidator,
+
     ) {}
 
     public createUser = async (
         req: Request,
         res: Response
     ): Promise<Response> => {
+
+        const errors = await this.userValidator.validateCreateAccount(req);
+
+        if (errors.length > 0) {
+            return res.status(400).json({ errors });
+        }
+
         const userInfo = await this.userMappers.mapRequestToUser(req);
 
         try {

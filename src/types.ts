@@ -13,7 +13,10 @@ const Types = {
     UserDao: Symbol.for('UserDao'),
 
     // Utils
-    SaltAndHash: Symbol.for('SaltAndHash')
+    SaltAndHash: Symbol.for('SaltAndHash'),
+
+    // Validators
+    UserValidator: Symbol.for('UserValidator'),
 };
 
 export default Types;
