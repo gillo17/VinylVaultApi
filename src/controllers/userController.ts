@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { UserMappers } from '../mappers/userMappers';
+import { UserMapper } from '../mappers/userMapper';
 import { UserService } from '../services/userService';
 import Types from '../types';
 import { injectable, inject } from 'inversify';
@@ -8,7 +8,7 @@ import { UserValidator } from '../validators/userValidator';
 @injectable()
 export class UserController {
     public constructor(
-        @inject(Types.UserMappers) private userMappers: UserMappers,
+        @inject(Types.UserMapper) private userMappers: UserMapper,
         @inject(Types.UserService) private userService: UserService,
         @inject(Types.UserValidator) private userValidator: UserValidator,
 

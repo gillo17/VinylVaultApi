@@ -2,11 +2,6 @@ import { describe, expect, test, jest } from '@jest/globals';
 import { SaltAndHash } from '../../../src/utils/saltAndHash';
 import { UserDao } from '../../../src/daos/userDao';
 import { UserService } from '../../../src/services/userService';
-import {
-    UserModel,
-    UserAuthorisation,
-    IUserLogin,
-} from '../../../src/models/users';
 import jwt from 'jsonwebtoken';
 import { iuserLogin, testUser, testUserAuthorisation } from '../testTypes';
 

@@ -1,9 +1,11 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import http from 'http';
 import mongoose from 'mongoose';
 import { config } from './config/config';
 import Logging from './utils/Logging';
 import userRouter from './routes/user';
+import collectionsRouter from './routes/collections';
+import { verifyToken } from './middleware/auth';
 
 const router = express();
 
@@ -47,6 +49,7 @@ const ServerStart = () => {
     });
 
     router.use('/user', userRouter);
+    router.use('/collections', verifyToken, collectionsRouter);
 
     router.use((req, res, next) => {
         const error = new Error(`Route Not found`);

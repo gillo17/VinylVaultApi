@@ -1,3 +1,4 @@
+import Collection from '../../src/models/collections';
 import {
     IUserLogin,
     UserAuthorisation,
@@ -14,6 +15,14 @@ const testUser: UserModel = {
         iterations: 2,
     },
 };
+
+const testCollection = new Collection({
+        _id: 'testId',
+        collectionName: 'testCollectionName',
+        description: 'testDescription',
+        vinyls: [],
+        userID: 'testUserID'
+    });
 
 const testUserAuthorisation: UserAuthorisation = {
     _id: '1',
@@ -32,4 +41,4 @@ const iuserLogin: IUserLogin = {
     password: 'password',
 };
 
-export { testUser, testUserAuthorisation, iuserLogin };
+export { testUser, testUserAuthorisation, iuserLogin, testCollection };

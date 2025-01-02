@@ -1,10 +1,10 @@
 import { describe, expect, test, jest } from '@jest/globals';
-import { UserMappers } from '../../../src/mappers/userMappers';
+import { UserMapper } from '../../../src/mappers/userMapper';
 import { SaltAndHash } from '../../../src/utils/saltAndHash';
 
 describe('User Mapper Tests', () => {
     const saltAndHash = new SaltAndHash(); // Create an instance of SaltAndHash
-    const userMapper = new UserMappers(saltAndHash);
+    const userMapper = new UserMapper(saltAndHash);
 
     const testRequest = {
         body: {

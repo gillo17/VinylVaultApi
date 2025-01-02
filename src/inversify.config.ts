@@ -1,19 +1,32 @@
 import { Container } from 'inversify';
 import { UserController } from './controllers/userController';
-import { UserMappers } from './mappers/userMappers';
+import { UserMapper } from './mappers/userMapper';
 import { UserService } from './services/userService';
 import { UserDao } from './daos/userDao';
 import Types from './types';
 import { SaltAndHash } from './utils/saltAndHash';
 import { UserValidator } from './validators/userValidator';
+import { CollectionsController } from './controllers/collectionsController';
+import { CollectionsService } from './services/collectionsService';
+import { CollectionsDao } from './daos/collectionsDao';
+import { CollectionsValidator } from './validators/collectionsValidator';
+import { CollectionsMapper } from './mappers/collectionsMapper';
 
 const container = new Container();
 
+// User module
 container.bind<UserController>(Types.UserController).to(UserController);
-container.bind<UserMappers>(Types.UserMappers).to(UserMappers);
+container.bind<UserMapper>(Types.UserMapper).to(UserMapper);
 container.bind<UserService>(Types.UserService).to(UserService);
 container.bind<UserDao>(Types.UserDao).to(UserDao);
 container.bind<SaltAndHash>(Types.SaltAndHash).to(SaltAndHash);
 container.bind<UserValidator>(Types.UserValidator).to(UserValidator);
+
+// Collections module
+container.bind<CollectionsController>(Types.CollectionsController).to(CollectionsController);
+container.bind<CollectionsService>(Types.CollectionsService).to(CollectionsService);
+container.bind<CollectionsDao>(Types.CollectionsDao).to(CollectionsDao);
+container.bind<CollectionsValidator>(Types.CollectionsValidator).to(CollectionsValidator);
+container.bind<CollectionsMapper>(Types.CollectionsMapper).to(CollectionsMapper);
 
 export default container;
