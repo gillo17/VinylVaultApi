@@ -8,7 +8,6 @@ import { testUser } from '../testTypes';
 describe('User Dao Tests', () => {
     const userDao = new UserDao();
 
-    test('Create a user account', async () => {});
     describe('User Dao Tests', () => {
         const userDao = new UserDao();
 

@@ -8,7 +8,10 @@
         "emitDecoratorMetadata": true,
         "forceConsistentCasingInFileNames": true,
         "strict": true,
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "node",
+        "types": ["node", "express"]
     },
     "include": ["src/**/*"]
 }

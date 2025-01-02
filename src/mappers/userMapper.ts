@@ -6,7 +6,7 @@ import Types from '../types';
 import Logging from '../utils/Logging';
 
 @injectable()
-export class UserMappers {
+export class UserMapper {
     constructor(@inject(Types.SaltAndHash) private saltAndHash: SaltAndHash) {}
 
     public async mapRequestToUser(req: any): Promise<UserModel> {

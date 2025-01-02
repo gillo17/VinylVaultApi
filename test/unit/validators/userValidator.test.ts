@@ -1,5 +1,5 @@
 import { UserValidator } from '../../../src/validators/userValidator';
-import { describe, expect, test, jest } from '@jest/globals';
+import { describe, expect, test, beforeEach } from '@jest/globals';
 
 describe('User Validator Tests', () => {
 
