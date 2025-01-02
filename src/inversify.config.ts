@@ -5,6 +5,7 @@ import { UserService } from './services/userService';
 import { UserDao } from './daos/userDao';
 import Types from './types';
 import { SaltAndHash } from './utils/saltAndHash';
+import { UserValidator } from './validators/userValidator';
 
 const container = new Container();
 
@@ -13,5 +14,6 @@ container.bind<UserMappers>(Types.UserMappers).to(UserMappers);
 container.bind<UserService>(Types.UserService).to(UserService);
 container.bind<UserDao>(Types.UserDao).to(UserDao);
 container.bind<SaltAndHash>(Types.SaltAndHash).to(SaltAndHash);
+container.bind<UserValidator>(Types.UserValidator).to(UserValidator);
 
 export default container;
