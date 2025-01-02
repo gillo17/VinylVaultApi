@@ -37,8 +37,6 @@ export class UserController {
     ): Promise<Response> => {
         const userInfo = this.userMappers.mapRequestToUserLogin(req);
 
-        Logging.info(userInfo);
-
         const result = await this.userService.accountLogin(userInfo);
 
         if (result) {
