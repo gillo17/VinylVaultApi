@@ -5,6 +5,7 @@ import Logging from '../utils/Logging';
 const secret = process.env.JWT_SECRET;
 
 export const verifyToken = (req: Request, res: Response, next: NextFunction): void => {
+    
     const token = req.headers['authorization'];
 
     if (!token) {

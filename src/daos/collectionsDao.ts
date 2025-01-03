@@ -17,4 +17,12 @@ export class CollectionsDao {
             }            
         }
     }
+
+    async getCollections(userID: string): Promise<CollectionModel[]> {
+        try {
+            return await Collection.find({ userID });
+        } catch (error) {
+            throw new Error(error as string);
+        }
+    }
 }
