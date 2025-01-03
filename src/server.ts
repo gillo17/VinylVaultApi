@@ -6,6 +6,7 @@ import Logging from './utils/Logging';
 import userRouter from './routes/user';
 import collectionsRouter from './routes/collections';
 import { verifyToken } from './middleware/auth';
+import cors from 'cors';
 
 const router = express();
 
@@ -38,15 +39,12 @@ const ServerStart = () => {
     router.use(express.urlencoded({ extended: true }));
     router.use(express.json());
 
-    router.use((req, res, next) => {
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-        res.setHeader(
-            'Access-Control-Allow-Headers',
-            'Content-Type, Authorization'
-        );
-        next();
-    });
+    router.use(cors({
+        origin: '*',
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    }));
+
 
     router.use('/user', userRouter);
     router.use('/collections', verifyToken, collectionsRouter);
@@ -56,6 +54,7 @@ const ServerStart = () => {
         Logging.error(`Route Not Found - Route: ${req.originalUrl}`);
 
         res.status(404).json({ message: error.message });
+        next();
     });
 
     http.createServer(router).listen(config.server.port, () => {

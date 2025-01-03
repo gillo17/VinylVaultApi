@@ -7,6 +7,11 @@ export interface CollectionModel {
     userID: string;
 }
 
+export interface ViewCollectionModel {
+    id: string;
+    collectionName: string;
+}
+
 export interface CollectionModel extends Document {}
 
 const CollectionsSchema: Schema = new Schema(

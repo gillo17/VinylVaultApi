@@ -11,4 +11,8 @@ router.post('/createCollection', (req, res) => {
     collectionController.createCollection(req, res);
 });
 
+router.get('/getCollections', (req, res) => {
+    collectionController.getCollections(req, res);
+});
+
 export = router;
