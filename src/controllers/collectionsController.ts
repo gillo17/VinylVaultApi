@@ -4,6 +4,7 @@ import Types from '../types';
 import { CollectionsService } from '../services/collectionsService';
 import { CollectionsMapper } from '../mappers/collectionsMapper';
 import { CollectionsValidator } from '../validators/collectionsValidator';
+import { CollectionModel, ViewCollectionModel } from '../models/collections';
 
 @injectable()
 export class CollectionsController {
@@ -26,14 +27,28 @@ export class CollectionsController {
 
         const collection = await this.collectionMapper.mapRequestToCollection(req);
 
-        console.log(collection)
-
         const result =  await this.collectionService.createCollection(collection);
 
         if (!result) {
             return res.status(201).json({ message: 'Collection created' });
         } else {
             return res.status(500).json({ error: result });
+        }
+    }
+
+    public getCollections = async (
+        req: Request,
+        res: Response,
+    ): Promise<Response> => {
+        
+        const userID = req.body.user._id;
+
+        const collections: ViewCollectionModel[] = await this.collectionService.getCollections(userID);
+
+        if (collections) {
+            return res.status(200).json(collections);
+        } else {
+            return res.status(500).json({ error: 'Error fetching collections' });
         }
     }
 

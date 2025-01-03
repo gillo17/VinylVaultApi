@@ -9,7 +9,7 @@ export class CollectionsValidator {
 
         if (!collectionData.collectionName) {
             errors.push('Collection name is required');
-        } else if (!validator.isAlphanumeric(collectionData.collectionName)) {
+        } else if (!validator.isAlphanumeric(collectionData.collectionName, 'en-US', { ignore: ' ' })) {
             errors.push('Collection name must only contain letters and numbers');
         } else if (collectionData.collectionName.length > 30) {
             errors.push('Collection name is too long, max 30 characters');
@@ -18,7 +18,7 @@ export class CollectionsValidator {
         if (collectionData.description) {
             if (collectionData.description.length > 50) {
                 errors.push('Description is too long, max 50 characters');
-            } else if (!validator.isAlpha(collectionData.description)) {
+            } else if (!validator.isAlpha(collectionData.description, 'en-US', { ignore: ' ' })) {
                 errors.push('Description must be alphabetic');
             }
         }

@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Collections, { CollectionModel } from "../models/collections";
+import Collections, { CollectionModel, ViewCollectionModel } from "../models/collections";
 
 export class CollectionsMapper {
 
@@ -17,5 +17,20 @@ export class CollectionsMapper {
         });
 
         return collection;
+    }
+
+    public async mapCollectionToViewCollection(collection: CollectionModel[]): Promise<ViewCollectionModel[]> {
+        
+        const collections: ViewCollectionModel[] = [];
+
+        for (let i = 0; i < collection.length; i++) {
+
+            const viewCollection: ViewCollectionModel = {
+                id: collection[i]._id as string,
+                collectionName: collection[i].collectionName
+            };
+            collections.push(viewCollection);
+        }
+        return collections;
     }
 } 
