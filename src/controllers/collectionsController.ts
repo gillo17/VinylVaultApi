@@ -4,7 +4,11 @@ import Types from '../types';
 import { CollectionsService } from '../services/collectionsService';
 import { CollectionsMapper } from '../mappers/collectionsMapper';
 import { CollectionsValidator } from '../validators/collectionsValidator';
-import { CollectionModel, ViewCollectionModel } from '../models/collections';
+import { ViewCollectionModel } from '../models/collections';
+import { AwsMapper } from '../mappers/awsMapper';
+import { AwsService } from '../services/awsService';
+import Rekognition from 'aws-sdk/clients/rekognition';
+import Logging from '../utils/Logging';
 
 @injectable()
 export class CollectionsController {
@@ -12,7 +16,9 @@ export class CollectionsController {
     constructor(
         @inject(Types.CollectionsService) private collectionService: CollectionsService,
         @inject(Types.CollectionsMapper) private collectionMapper: CollectionsMapper,
-        @inject(Types.CollectionsValidator) private collectionValidator: CollectionsValidator
+        @inject(Types.CollectionsValidator) private collectionValidator: CollectionsValidator,
+        @inject(Types.AWSMapper) private awsMapper: AwsMapper,
+        @inject(Types.AWSService) private awsService: AwsService,
     ) {}
     public createCollection = async (
         req: Request,
@@ -52,4 +58,28 @@ export class CollectionsController {
         }
     }
 
+    public identifyVinyl = async (
+        req: Request,
+        res: Response
+    ): Promise<Response> => {
+
+        console.log(req.body.formData._parts[0][1]);
+
+        if (!req.file) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+
+        const awsImageInterface: Rekognition.Types.DetectCustomLabelsRequest = await this.awsMapper.mapRequestToAWSImageInterface(req);
+
+        const result  = await this.awsService.identifyVinyl(awsImageInterface);
+        Logging.info(result);
+
+        if (!result) {
+            return res.status(404).json({ error: 'Error identifying vinyl' });
+        } else if (result.length === 2) {
+            return res.status(200).json({ artist: result[0], album: result[1] });
+        }
+
+        return res.status(500).json({ message: 'An Error Has Occurred' });
+    }
 }

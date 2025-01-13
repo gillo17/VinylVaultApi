@@ -1,3 +1,5 @@
+import { AwsMapper } from "./mappers/awsMapper";
+import { AwsService } from "./services/awsService";
 
 const Types = {
 
@@ -8,10 +10,12 @@ const Types = {
     // Mappers
     UserMapper: Symbol.for('UserMapper'),
     CollectionsMapper: Symbol.for('CollectionsMapper'),
+    AWSMapper: Symbol.for('AwsMapper'),
 
     // Services
     UserService: Symbol.for('UserService'),
     CollectionsService: Symbol.for('CollectionsService'),
+    AWSService: Symbol.for('AwsService'),
 
     // Daos
     UserDao: Symbol.for('UserDao'),
