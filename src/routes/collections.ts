@@ -1,12 +1,9 @@
-import express from 'express';
 import container from '../inversify.config';
 import Types from '../types';
 import { CollectionsController } from '../controllers/collectionsController';
-import multer from 'multer';
+import express from 'express';
 
 const router = express.Router();
-
-const upload = multer()
 
 const collectionController = container.get<CollectionsController>(Types.CollectionsController);
 
@@ -18,8 +15,20 @@ router.get('/getCollections', (req, res) => {
     collectionController.getCollections(req, res);
 });
 
-router.post('/identifyVinyl', upload.single('file'), (req, res) => {
-    collectionController.identifyVinyl(req, res);
+router.get('/getUrl', (req, res) => {
+    collectionController.generatePresignedUrl(req, res);
 });
+
+router.post('/saveVinylToCollection', (req, res) => {
+    collectionController.saveVinylToCollection(req, res);
+});
+
+router.get('/getCollectionInfo', (req, res) => {
+    collectionController.getCollection(req, res);
+});
+
+router.post('/submitImageForTraining', (req, res) => {
+    collectionController.addImageToTrainingData(req, res);
+})
 
 export = router;

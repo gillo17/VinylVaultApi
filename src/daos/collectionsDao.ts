@@ -1,6 +1,7 @@
 import { CollectionModel } from "../models/collections";
 import Collection from '../models/collections';
 import { MongoServerError } from 'mongodb';
+import { spotifyAbumData } from "../models/spotify";
 
 export class CollectionsDao {
 
@@ -25,4 +26,35 @@ export class CollectionsDao {
             throw new Error(error as string);
         }
     }
+
+    async getCollection(collectionId: string): Promise<CollectionModel> {
+        try {
+            const collection = await Collection.findById(collectionId);
+            if (!collection) {
+                throw new Error('Collection not found');
+            }
+            return collection;
+        } catch (error) {
+            console.log(error);
+            throw new Error(error as string);
+        }
+    }
+
+    async saveVinylToCollection(albumInfo: spotifyAbumData, collectionID: string) {
+        try {
+            const collection = await Collection.findById(collectionID);
+            if (!collection) {
+                throw new Error('Collection not found');
+            }
+            collection.vinyls.push(albumInfo);
+            await collection.save();
+
+            return 'Vinyl saved to collection';
+
+        } catch (error) {
+            console.log(error);
+            throw new Error(error as string);
+        }
+    }
+        
 }

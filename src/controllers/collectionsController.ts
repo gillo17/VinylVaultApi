@@ -4,11 +4,9 @@ import Types from '../types';
 import { CollectionsService } from '../services/collectionsService';
 import { CollectionsMapper } from '../mappers/collectionsMapper';
 import { CollectionsValidator } from '../validators/collectionsValidator';
-import { ViewCollectionModel } from '../models/collections';
+import { saveVinylToCollectionModel, ViewCollectionModel } from '../models/collections';
 import { AwsMapper } from '../mappers/awsMapper';
 import { AwsService } from '../services/awsService';
-import Rekognition from 'aws-sdk/clients/rekognition';
-import Logging from '../utils/Logging';
 
 @injectable()
 export class CollectionsController {
@@ -58,28 +56,76 @@ export class CollectionsController {
         }
     }
 
-    public identifyVinyl = async (
+    public generatePresignedUrl = async (
         req: Request,
         res: Response
     ): Promise<Response> => {
 
-        console.log(req.body.formData._parts[0][1]);
+        const awsUrlRequest = await this.awsMapper.generatePresignedUrlRequest();
 
-        if (!req.file) {
-            return res.status(400).json({ error: 'No file uploaded' });
+        const url  = await this.awsService.generatePresignedUrl(awsUrlRequest);
+
+        if (!url) {
+            return res.status(500).json({ error: 'Error generating url' });
+        } else {
+            return res.status(200).json({ 
+                url: url,
+                key: awsUrlRequest.Key
+            });
+        }
+    }
+
+    public addImageToTrainingData = async (
+        req: Request,
+        res: Response
+    ): Promise<Response> => {
+
+        const addImageToTrainingData = await this.awsMapper.mapRequestToAddImageToTraining(req);
+
+        const data = await this.awsService.addImageToTrainingData(addImageToTrainingData);
+
+        return res.status(201).json({ artist: data.artist, albumName: data.albumName });
+    }
+
+    public saveVinylToCollection = async (
+        req: Request,
+        res: Response
+    ): Promise<Response> => {
+        
+        const errors = await this.collectionValidator.validateSaveToCollection(req);
+
+        if (errors.length > 0) {
+            return res.status(400).json({ errors });
         }
 
-        const awsImageInterface: Rekognition.Types.DetectCustomLabelsRequest = await this.awsMapper.mapRequestToAWSImageInterface(req);
+        const collection: saveVinylToCollectionModel = await this.collectionMapper.mapRequestToSaveVinylToCollection(req);
 
-        const result  = await this.awsService.identifyVinyl(awsImageInterface);
-        Logging.info(result);
+        const result =  await this.collectionService.saveVinylToCollection(collection);
 
-        if (!result) {
-            return res.status(404).json({ error: 'Error identifying vinyl' });
-        } else if (result.length === 2) {
-            return res.status(200).json({ artist: result[0], album: result[1] });
+        if (result) {
+            return res.status(201).json({ message: 'Vinyl saved to collection' });
+        } else {
+            return res.status(500).json({ error: result});
         }
 
-        return res.status(500).json({ message: 'An Error Has Occurred' });
+    }
+
+    public getCollection = async (
+        req: Request,
+        res: Response
+    ): Promise<Response> => {
+        
+        const collectionID = req.query.collectionID as string;
+        console.log(collectionID);
+
+        const collection = await this.collectionService.getCollection(collectionID);
+
+        console.log(collection);
+
+        if (collection) {
+            return res.status(200).json(collection);
+        } else {
+            return res.status(500).json({ error: 'Error fetching collection' });
+        }
     }
 }

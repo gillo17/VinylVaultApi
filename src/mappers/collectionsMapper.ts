@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Collections, { CollectionModel, ViewCollectionModel } from "../models/collections";
+import Collections, { CollectionModel, ViewCollectionModel, saveVinylToCollectionModel, searchForVinylModel } from "../models/collections";
 
 export class CollectionsMapper {
 
@@ -32,5 +32,27 @@ export class CollectionsMapper {
             collections.push(viewCollection);
         }
         return collections;
+    }
+
+    public async mapRequestToSaveVinylToCollection(req: any): Promise<saveVinylToCollectionModel> {
+
+        const data: saveVinylToCollectionModel = {
+            spotifyAlbumID: req.body.VinylID,
+            collectionID: req.body.collectionID    
+        }
+
+        console.log(data);
+
+        return data;
+    }
+
+    public async mapRequestToSearchForVinyl(artist: string, album: string): Promise<searchForVinylModel> {
+        
+        const data: searchForVinylModel = {
+            artist: artist,
+            albumName: album
+        }
+
+        return data;
     }
 } 
