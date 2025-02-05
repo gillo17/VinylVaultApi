@@ -1,15 +1,26 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { spotifyAbumData } from './spotify';
 
 export interface CollectionModel {
     collectionName: string;
     description?: string;
-    vinyls: [];
+    vinyls: spotifyAbumData[];
     userID: string;
 }
 
 export interface ViewCollectionModel {
     id: string;
     collectionName: string;
+}
+
+export interface searchForVinylModel {
+    artist: string;
+    albumName: string;
+}
+
+export interface saveVinylToCollectionModel {
+    spotifyAlbumID: string;
+    collectionID: string;
 }
 
 export interface CollectionModel extends Document {}

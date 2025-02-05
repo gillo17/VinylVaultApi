@@ -5,6 +5,7 @@ import { config } from './config/config';
 import Logging from './utils/Logging';
 import userRouter from './routes/user';
 import collectionsRouter from './routes/collections';
+import vinylRouter from './routes/vinyl';
 import { verifyToken } from './middleware/auth';
 import cors from 'cors';
 
@@ -48,6 +49,7 @@ const ServerStart = () => {
 
     router.use('/user', userRouter);
     router.use('/collections', verifyToken, collectionsRouter);
+    router.use('/vinyl', verifyToken, vinylRouter);
 
     router.use((req, res, next) => {
         const error = new Error(`Route Not found`);

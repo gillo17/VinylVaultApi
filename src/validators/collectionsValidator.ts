@@ -25,4 +25,20 @@ export class CollectionsValidator {
         
         return errors;
     }
+
+    public async validateSaveToCollection(req: any) {
+
+        var errors: string[] = [];
+
+        if (!req.body.collectionID) {
+            errors.push('Collection ID is required');
+        }
+
+        if(!req.body.VinylID) {
+            errors.push('Vinyl ID is required');
+        }
+
+        return errors;
+
+    }
 }   
