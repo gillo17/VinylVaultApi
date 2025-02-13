@@ -11,6 +11,8 @@ export class SpotifyService {
     public async searchForAlbums(searchData: searchForVinylModel) {
         const token = await this.getSpotifyToken()
 
+        Logging.info(searchData)
+
         const response = await axios.get(`https://api.spotify.com/v1/search?q=album:${searchData.albumName}%20artist:${searchData.artist}&type=album`, {
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -29,6 +31,21 @@ export class SpotifyService {
                 'Authorization': `Bearer ${token}`
             }
         })
+
+        return response.data
+
+    }
+
+    public async getArtistsInfo(artists: string) {
+        const token = await this.getSpotifyToken()
+
+        const response = await axios.get(`https://api.spotify.com/v1/artists?ids=${artists}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+
+        Logging.info(response.data)
 
         return response.data
 

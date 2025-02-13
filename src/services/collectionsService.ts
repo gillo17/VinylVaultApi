@@ -5,7 +5,7 @@ import { CollectionsDao } from "../daos/collectionsDao";
 import { CollectionsMapper } from "../mappers/collectionsMapper";
 import { SpotifyService } from "./spotifyService";
 import { SpotifyMapper } from "../mappers/spotifyMapper";
-import { spotifyAbumData } from "../models/spotify";
+import { spotifyAlbumData } from "../models/spotify";
 
 export class CollectionsService {
 
@@ -37,7 +37,7 @@ export class CollectionsService {
 
         const albumInfo = await this.spotifyService.getAlbumInfo(data.spotifyAlbumID);
 
-        const mappedAlbumInfo: spotifyAbumData = await this.spotifyMapper.mapSpotifyAlbumData(albumInfo);
+        const mappedAlbumInfo: spotifyAlbumData = await this.spotifyMapper.mapSpotifyAlbumData(albumInfo);
 
         return this.collectionDao.saveVinylToCollection(mappedAlbumInfo, data.collectionID);
     }

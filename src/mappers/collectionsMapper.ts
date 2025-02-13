@@ -41,8 +41,6 @@ export class CollectionsMapper {
             collectionID: req.body.collectionID    
         }
 
-        console.log(data);
-
         return data;
     }
 

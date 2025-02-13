@@ -22,4 +22,8 @@ router.get('/searchVinyl', (req, res) => {
     vinylController.searchVinyl(req, res);
 });
 
+router.get('/getRecommendations', (req, res) => {
+    vinylController.getRecommendedAlbums(req, res);
+});
+
 export = router;

@@ -1,10 +1,10 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { spotifyAbumData } from './spotify';
+import { spotifyAlbumData } from './spotify';
 
 export interface CollectionModel {
     collectionName: string;
     description?: string;
-    vinyls: spotifyAbumData[];
+    vinyls: spotifyAlbumData[];
     userID: string;
 }
 

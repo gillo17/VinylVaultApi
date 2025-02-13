@@ -9,6 +9,8 @@ import { searchForVinylModel } from "../models/collections";
 import { CollectionsMapper } from "../mappers/collectionsMapper";
 import { SpotifyService } from "../services/spotifyService";
 import { OpenAIService } from "../services/openAIService";
+import { VinylService } from "../services/vinylService";
+import { spotifyAlbumData } from "../models/spotify";
 
 @injectable()
 export class VinylController {
@@ -18,7 +20,8 @@ export class VinylController {
         @inject(Types.AWSMapper) private awsMapper: AwsMapper,
         @inject(Types.CollectionsMapper) private collectionMapper: CollectionsMapper,
         @inject(Types.SpotifyService) private spotifyService: SpotifyService,
-        @inject(Types.OpenAIService) private openAIService: OpenAIService
+        @inject(Types.OpenAIService) private openAIService: OpenAIService,
+        @inject(Types.VinylService) private vinylService: VinylService
     ) {}
 
     public identifyVinyl = async (
@@ -72,6 +75,22 @@ export class VinylController {
             return res.status(200).json({albumInfo, albumBackground});
         } else {
             return res.status(500).json({ error: 'Error fetching vinyl' });
+        }
+    }
+
+    public getRecommendedAlbums = async (
+        req: Request,
+        res: Response
+    ): Promise<Response> => {
+
+        const collectionId = req.query.collectionId as string;
+
+        const recommendedAlbums: spotifyAlbumData[] = await this.vinylService.getRecommendedVinyls(collectionId);
+
+        if (recommendedAlbums) {
+            return res.status(200).json(recommendedAlbums);
+        } else {
+            return res.status(500).json({ error: 'Error fetching recommended albums' });
         }
     }
 

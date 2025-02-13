@@ -35,6 +35,11 @@ export interface UserAuthorisation {
     };
 }
 
+export interface UserDetails {
+    _id: string;
+    email: string;
+}
+
 export interface IUserModel extends UserModel, IUserLogin, Document {}
 
 const UserSchema: Schema = new Schema(
