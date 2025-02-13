@@ -1,5 +1,5 @@
 import { MongoServerError } from 'mongodb';
-import { IUserLogin, UserAuthorisation, UserModel } from '../models/users';
+import { IUserLogin, UserAuthorisation, UserDetails, UserModel } from '../models/users';
 import User from '../models/users';
 import { injectable } from 'inversify';
 
@@ -29,5 +29,9 @@ export class UserDao {
         } else {
             throw new Error('User not Found');
         }
+    }
+
+    public async getAllUsers(): Promise<UserDetails[]> {
+        return await User.find();
     }
 }

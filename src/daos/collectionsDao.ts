@@ -1,7 +1,7 @@
 import { CollectionModel } from "../models/collections";
 import Collection from '../models/collections';
 import { MongoServerError } from 'mongodb';
-import { spotifyAbumData } from "../models/spotify";
+import { spotifyAlbumData } from "../models/spotify";
 
 export class CollectionsDao {
 
@@ -40,7 +40,7 @@ export class CollectionsDao {
         }
     }
 
-    async saveVinylToCollection(albumInfo: spotifyAbumData, collectionID: string) {
+    async saveVinylToCollection(albumInfo: spotifyAlbumData, collectionID: string) {
         try {
             const collection = await Collection.findById(collectionID);
             if (!collection) {

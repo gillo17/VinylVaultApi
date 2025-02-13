@@ -17,8 +17,29 @@ export class OpenAIService {
                 ],
                 store: false,
             });
-            console.log(gptResponse.choices[0].message.content);
             return gptResponse.choices[0].message.content
+        } catch (error) {
+            Logging.error(error);
+        }
+    }
+
+
+    public async generateRecommendedAlbums(albums: string): Promise<any> {
+        try {
+            const gptResponse = await openai.chat.completions.create({
+                model: "gpt-4o-mini",
+                messages: [
+                    { role: "developer", content: "You are a helpful assistant." },
+                    {
+                        role: "user",
+                        content: "Can you return a list of recommended albums different to the ones provided to listen to based on the following albums: " + albums + "Without any other text and in Json format including both artist and album name",
+                    },
+                ],
+                store: false,
+            });
+           
+            return gptResponse.choices[0].message.content
+            
         } catch (error) {
             Logging.error(error);
         }

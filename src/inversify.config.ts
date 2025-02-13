@@ -17,6 +17,7 @@ import { SpotifyService } from './services/spotifyService';
 import { SpotifyMapper } from './mappers/spotifyMapper';
 import { OpenAIService } from './services/openAIService';
 import { VinylController } from './controllers/vinylController';
+import { VinylService } from './services/vinylService';
 
 const container = new Container();
 
@@ -37,6 +38,7 @@ container.bind<CollectionsMapper>(Types.CollectionsMapper).to(CollectionsMapper)
 
 // Vinyl module
 container.bind<VinylController>(Types.VinylController).to(VinylController);
+container.bind<VinylService>(Types.VinylService).to(VinylService);
 
 // AWS module
 container.bind<AwsService>(Types.AWSService).to(AwsService);

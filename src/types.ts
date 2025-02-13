@@ -1,4 +1,3 @@
-import { OpenAIService } from "./services/openAIService";
 
 const Types = {
 
@@ -19,6 +18,7 @@ const Types = {
     AWSService: Symbol.for('AwsService'),
     SpotifyService: Symbol.for('SpotifyService'),
     OpenAIService: Symbol.for('OpenAIService'),
+    VinylService: Symbol.for('VinylService'),
 
     // Daos
     UserDao: Symbol.for('UserDao'),
