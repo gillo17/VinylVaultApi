@@ -6,7 +6,6 @@ import { SpotifyService } from "./spotifyService";
 import { OpenAIService } from "./openAIService";
 import { SpotifyMapper } from "../mappers/spotifyMapper";
 import { spotifyAlbumData } from "../models/spotify";
-import Logging from "../utils/Logging";
 
 @injectable()
 export class VinylService {

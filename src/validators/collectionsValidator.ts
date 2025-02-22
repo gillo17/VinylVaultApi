@@ -38,7 +38,9 @@ export class CollectionsValidator {
             errors.push('Vinyl ID is required');
         }
 
-        return errors;
+        if (errors.length > 0) {
+            throw new Error(String(errors));
+        }
 
     }
 }   

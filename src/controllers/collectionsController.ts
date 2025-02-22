@@ -7,6 +7,7 @@ import { CollectionsValidator } from '../validators/collectionsValidator';
 import { saveVinylToCollectionModel, ViewCollectionModel } from '../models/collections';
 import { AwsMapper } from '../mappers/awsMapper';
 import { AwsService } from '../services/awsService';
+import Logging from '../utils/Logging';
 
 @injectable()
 export class CollectionsController {
@@ -63,14 +64,14 @@ export class CollectionsController {
 
         const awsUrlRequest = await this.awsMapper.generatePresignedUrlRequest();
 
-        const url  = await this.awsService.generatePresignedUrl(awsUrlRequest);
+        const url  = await this.awsService.generatePresignedUrl(awsUrlRequest.command);
 
         if (!url) {
             return res.status(500).json({ error: 'Error generating url' });
         } else {
             return res.status(200).json({ 
                 url: url,
-                key: awsUrlRequest.Key
+                key: awsUrlRequest.fileKey
             });
         }
     }
@@ -79,35 +80,38 @@ export class CollectionsController {
         req: Request,
         res: Response
     ): Promise<Response> => {
+        try {
 
-        const addImageToTrainingData = await this.awsMapper.mapRequestToAddImageToTraining(req);
+            const addImageToTrainingData = await this.awsMapper.mapRequestToAddImageToTraining(req);
+            await this.awsService.addImageToTrainingData(addImageToTrainingData);
+            return res.status(201).json({ artist: req.body.Artist, albumName: req.body.AlbumName });
 
-        const data = await this.awsService.addImageToTrainingData(addImageToTrainingData);
+        } catch (error) {
+            Logging.error("Error: Adding Image to Training Data");
+            Logging.error(error);
+            return res.status(500).json({ error: error });
+        }
 
-        return res.status(201).json({ artist: data.artist, albumName: data.albumName });
     }
 
     public saveVinylToCollection = async (
         req: Request,
         res: Response
     ): Promise<Response> => {
-        
-        const errors = await this.collectionValidator.validateSaveToCollection(req);
+        try {
 
-        if (errors.length > 0) {
-            return res.status(400).json({ errors });
-        }
+            await this.collectionValidator.validateSaveToCollection(req);
 
-        const collection: saveVinylToCollectionModel = await this.collectionMapper.mapRequestToSaveVinylToCollection(req);
+            const collection: saveVinylToCollectionModel = await this.collectionMapper.mapRequestToSaveVinylToCollection(req);
 
-        const result =  await this.collectionService.saveVinylToCollection(collection);
+            await this.collectionService.saveVinylToCollection(collection);
 
-        if (result) {
             return res.status(201).json({ message: 'Vinyl saved to collection' });
-        } else {
-            return res.status(500).json({ error: result});
+        
+        } catch (error) {
+            return res.status(500).json({ error: error });
         }
-
+    
     }
 
     public getCollection = async (

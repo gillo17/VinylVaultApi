@@ -37,9 +37,15 @@ describe('AWS Mapper Tests', () => {
             }
             const result = await awsMapper.mapRequestToAddImageToTraining(req);
 
-            expect(result.albumName).toEqual('AlbumName');
-            expect(result.artist).toEqual('Artist');
-            expect(result.s3Key).toEqual('s3Key');
+            expect(result.ListObjectsParams.Bucket).toEqual('vinyls-for-training');
+            expect(result.copyObjectParams.Bucket).toEqual('vinyls-for-training');
+            expect(result.putObjectParams.Bucket).toEqual('vinyls-for-training');
+
+            expect(result.putObjectParams.Key).toEqual('vinyls-submitted-for-training/Artist_Albumname/');
+            expect(result.copyObjectParams.Key).toEqual('vinyls-submitted-for-training/Artist_Albumname/s3Key');
+
+            expect(result.copyObjectParams.CopySource).toEqual('/new-vinyls/s3Key');
+            expect(result.ListObjectsParams.Prefix).toEqual('vinyls-submitted-for-training/Artist_Albumname/');
         });
     });
 });

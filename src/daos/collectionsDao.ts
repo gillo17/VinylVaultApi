@@ -52,7 +52,6 @@ export class CollectionsDao {
             return 'Vinyl saved to collection';
 
         } catch (error) {
-            console.log(error);
             throw new Error(error as string);
         }
     }

@@ -39,7 +39,7 @@ export class CollectionsService {
 
         const mappedAlbumInfo: spotifyAlbumData = await this.spotifyMapper.mapSpotifyAlbumData(albumInfo);
 
-        return this.collectionDao.saveVinylToCollection(mappedAlbumInfo, data.collectionID);
+        this.collectionDao.saveVinylToCollection(mappedAlbumInfo, data.collectionID);
     }
 
 }

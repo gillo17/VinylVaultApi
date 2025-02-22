@@ -1,4 +1,4 @@
-import { Rekognition } from "aws-sdk";
+import { DetectCustomLabelsCommandInput } from "@aws-sdk/client-rekognition";
 import { inject, injectable } from "inversify";
 import Logging from "../utils/Logging";
 import { Request, Response } from 'express';
@@ -29,7 +29,7 @@ export class VinylController {
         res: Response
     ): Promise<Response> => {
 
-        const awsImageInterface: Rekognition.Types.DetectCustomLabelsRequest = await this.awsMapper.mapRequestToAWSImageInterface(req);
+        const awsImageInterface: DetectCustomLabelsCommandInput = await this.awsMapper.mapRequestToAWSImageInterface(req);
 
         const result  = await this.awsService.identifyVinyl(awsImageInterface);
         Logging.info(result);
