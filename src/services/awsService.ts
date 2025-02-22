@@ -1,97 +1,85 @@
-import AWS, { Rekognition } from 'aws-sdk';
-import Logging from '../utils/Logging';
+import { DetectCustomLabelsCommandInput, DetectCustomLabelsCommand } from '@aws-sdk/client-rekognition';
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { S3Client, ListObjectsV2Command, CopyObjectCommand, PutObjectCommand, GetObjectCommand } from "@aws-sdk/client-s3";
 import { addImageToTrainingData } from '../models/aws';
+import { RekognitionClient } from "@aws-sdk/client-rekognition";
 
-const rekognition = new AWS.Rekognition({
+const rekognition = new RekognitionClient({
   region: 'eu-west-1',
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || ''
+  }
 });
-const s3 = new AWS.S3({
-  region: 'eu-west-1',
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+
+const s3 = new S3Client({
+    region: 'eu-west-1',
+    credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
+    },
 })
 
 export class AwsService {
 
-    public async identifyVinyl(params: Rekognition.Types.DetectCustomLabelsRequest) {
+    public async identifyVinyl(params: DetectCustomLabelsCommandInput): Promise<string[]> {
         try {
-            const res = await rekognition.detectCustomLabels(params).promise();
+
+            const command = new DetectCustomLabelsCommand(params);
+            const res = await rekognition.send(command);
 
             if (res.CustomLabels && res.CustomLabels.length > 0) {
                 if (res.CustomLabels[0].Name) {
                     return this.vinylNameSplitter(res.CustomLabels[0].Name)
                 } else {
-                    Logging.error('Label Name is undefined');
+                    throw new Error(String('Label Name is undefined'));
                 }
             } else {
-                return null;
+                throw new Error(String('No labels found'));
             }
         } catch (error) {
-            Logging.error(error);
-            return null;
+            throw new Error(String(error));
         }
-
     }
 
     public async addImageToTrainingData(trainingData: addImageToTrainingData) {
-
-        const folderName = await this.folderNameFormatter(trainingData.artist, trainingData.albumName)
 
         if (!process.env.AWS_S3_BUCKET_NAME) {
             throw new Error('AWS_S3_BUCKET_NAME is not defined');
         }
 
-        const params = {
-            Bucket: 'vinyls-for-training',
-            Prefix: `vinyls-submitted-for-training/${folderName}/`,
-        };
+        try {
 
-        const s3FolderExists: AWS.S3.ListObjectsV2Output = await s3.listObjectsV2(params).promise();
-
-        if (s3FolderExists.Contents && s3FolderExists.Contents.length > 0) {
-
-            const params = {
-                Bucket: "vinyls-for-training",
-                CopySource: `/new-vinyls/${trainingData.s3Key}`,
-                Key: `vinyls-submitted-for-training/${folderName}/${trainingData.s3Key}`,
-            };
-
-            await s3.copyObject(params).promise();
-        } else {
-
-            await s3.putObject({
-                Bucket: 'vinyls-for-training',
-                Key: `vinyls-submitted-for-training/${folderName}/`,
-                Body: '',
-            }).promise();
-
-            const params = {
-                Bucket: 'vinyls-for-training',
-                CopySource: `/new-vinyls/${trainingData.s3Key}`,
-                Key: `vinyls-submitted-for-training/${folderName}/${trainingData.s3Key}`,
-            };
-
-            await s3.copyObject(params).promise();
-        }
-
-        return trainingData;
+            const command = new ListObjectsV2Command(trainingData.ListObjectsParams);
+            const s3FolderExists = await s3.send(command);
         
+            if (s3FolderExists.Contents && s3FolderExists.Contents.length > 0) {
+
+                const command = new CopyObjectCommand(trainingData.copyObjectParams);
+                await s3.send(command);
+
+            } else {
+
+                const putCommand = new PutObjectCommand(trainingData.putObjectParams);
+                await s3.send(putCommand);
+
+                const copyCommand = new CopyObjectCommand(trainingData.copyObjectParams);
+                await s3.send(copyCommand);
+            }     
+
+        } catch (error) {
+            throw new Error(String(error));
+        }
+   
     }
 
-    public async generatePresignedUrl(params: any): Promise<string|null> {
-        
+    public async generatePresignedUrl(params: GetObjectCommand): Promise<string> {
         try {
-            const url = await s3.getSignedUrlPromise('putObject', params);
+            const signedUrl = await getSignedUrl(s3, params, { expiresIn: 30 });
 
-            Logging.info(url)
-
-            return url;
+            return signedUrl;
         } catch (error) {
-            Logging.info(error)
-
-            return null;
+            throw new Error(String(error));
         }
 
     }
@@ -106,13 +94,5 @@ export class AwsService {
         const formattedAlbumName = splitAlbumName.join(' ');
 
         return [formattedArtist, formattedAlbumName]
-    }
-
-    private async folderNameFormatter(artist: string, albumName: string) {
-        const formattedArtist = artist.charAt(0).toUpperCase() + artist.slice(1).toLowerCase();
-        const formattedAlbumName = albumName.charAt(0).toUpperCase() + albumName.slice(1).toLowerCase();
-
-        return `${formattedArtist}_${formattedAlbumName}`;
-    
     }
 }

@@ -1,5 +1,7 @@
+import { CopyObjectCommandInput, PutObjectCommandInput, ListObjectsV2CommandInput } from "@aws-sdk/client-s3";
+
 export interface addImageToTrainingData {
-    albumName: string;
-    artist: string;
-    s3Key: string;
+    copyObjectParams: CopyObjectCommandInput,
+    putObjectParams: PutObjectCommandInput,
+    ListObjectsParams: ListObjectsV2CommandInput
 }
