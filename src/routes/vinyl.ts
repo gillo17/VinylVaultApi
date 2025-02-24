@@ -34,4 +34,8 @@ router.post('/saveVinylToWishlist', (req, res) => {
     vinylController.saveToWishlist(req, res);
 });
 
+router.get('/getAlbumsInlWishlist', (req, res) => {
+    vinylController.getAlbumsInWishlist(req, res);
+});
+
 export = router;

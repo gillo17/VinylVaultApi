@@ -9,6 +9,7 @@ import { spotifyAlbumData } from "../models/spotify";
 import { saveVinylToWishlistModel } from "../models/wishlist";
 import { WishlistDao } from "../daos/wishlistDao";
 import mongoose, { ObjectId } from "mongoose";
+import Logging from "../utils/Logging";
 
 @injectable()
 export class VinylService {
@@ -72,6 +73,13 @@ export class VinylService {
         const mappedVinyls = await this.spotifyMapper.mapSpotifyAlbumDataArray(searchForVinyl);
 
         return mappedVinyls;
+   }
+
+    async getAlbumsInWishlist(userId: string): Promise<spotifyAlbumData[]> {
+        const wishlistInfo = await this.wishlistDao.getWishlist(userId);
+        if (!wishlistInfo) return [];
+
+        return wishlistInfo.albums;
    }
 
    async saveToWishlist(saveToWishlist : saveVinylToWishlistModel) {

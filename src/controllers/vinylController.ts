@@ -120,6 +120,24 @@ export class VinylController {
         }
     }
 
+    public getAlbumsInWishlist = async (
+        req: Request,
+        res: Response
+    ): Promise<Response> => {
+        
+        try {
+            const userID = req.body.user._id;
+
+            const wishlist = await this.vinylService.getAlbumsInWishlist(userID);
+
+            return res.status(200).json({ albums: wishlist });
+
+        } catch (error) {
+            Logging.error(error);
+            return res.status(500).json({ error: `Error: ${error}`});
+        }
+    }
+
     public getRecommendedAlbums = async (
         req: Request,
         res: Response
