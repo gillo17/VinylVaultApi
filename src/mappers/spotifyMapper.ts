@@ -14,4 +14,22 @@ export class SpotifyMapper {
         return spotifyData;
         
     }
+
+    public async mapSpotifyAlbumDataArray(spotifyRes: any[]): Promise<spotifyAlbumData[]>  {
+
+        const spotifyData: spotifyAlbumData[] = [];
+
+        for (const album of spotifyRes) {
+            const albumData = {
+                albumName: album.name,
+                artist: album.artists[0].name,
+                spotifyID: album.id,
+                albumImage: album.images[0].url,
+                spotifyArtistID: album.artists[0].uri,
+            }
+            spotifyData.push(albumData);
+        }
+        return spotifyData;
+        
+    }
 }

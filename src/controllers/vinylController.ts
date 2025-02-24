@@ -11,6 +11,7 @@ import { SpotifyService } from "../services/spotifyService";
 import { OpenAIService } from "../services/openAIService";
 import { VinylService } from "../services/vinylService";
 import { spotifyAlbumData } from "../models/spotify";
+import { VinylMapper } from "../mappers/vinylMapper";
 
 @injectable()
 export class VinylController {
@@ -21,7 +22,8 @@ export class VinylController {
         @inject(Types.CollectionsMapper) private collectionMapper: CollectionsMapper,
         @inject(Types.SpotifyService) private spotifyService: SpotifyService,
         @inject(Types.OpenAIService) private openAIService: OpenAIService,
-        @inject(Types.VinylService) private vinylService: VinylService
+        @inject(Types.VinylService) private vinylService: VinylService,
+        @inject(Types.VinylMapper) private vinylMapper: VinylMapper
     ) {}
 
     public identifyVinyl = async (
@@ -75,6 +77,46 @@ export class VinylController {
             return res.status(200).json({albumInfo, albumBackground});
         } else {
             return res.status(500).json({ error: 'Error fetching vinyl' });
+        }
+    }
+
+    public searchVinylWishlist = async (
+        req: Request,
+        res: Response
+    ): Promise<Response> => {
+        
+        try {
+            const queryString = req.query.queryString as string;
+
+            const albums = await this.vinylService.searchForVinyl(queryString);
+
+            if (albums) {
+                return res.status(200).json({albums});
+            } else {
+                return res.status(200).json({ error: 'No Vinyls Found' });
+            }
+        } catch (error) {
+            return res.status(500).json({ error: 'Error fetching vinyl' });
+        }
+    }
+
+    public saveToWishlist = async (
+        req: Request,
+        res: Response
+    ): Promise<Response> => {
+        
+        try {
+            const albumId = req.query.albumId as string;
+            const userID = req.body.user._id;
+
+            const saveToWishlist = await this.vinylMapper.mapRequestToWishlist(albumId, userID);
+
+            await this.vinylService.saveToWishlist(saveToWishlist);
+
+            return res.status(200).json({ message: 'Vinyl saved to wishlist' });
+
+        } catch (error) {
+            return res.status(500).json({ error: `Error: ${error}`});
         }
     }
 
