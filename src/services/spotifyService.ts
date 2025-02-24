@@ -19,7 +19,6 @@ export class SpotifyService {
         return response.data.albums.items
 
     }
-
         
     public async getAlbumInfo(albumID: string) {
         const token = await this.getSpotifyToken()

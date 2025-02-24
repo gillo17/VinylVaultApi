@@ -11,6 +11,7 @@ const Types = {
     CollectionsMapper: Symbol.for('CollectionsMapper'),
     AWSMapper: Symbol.for('AwsMapper'),
     SpotifyMapper: Symbol.for('SpotifyMapper'),
+    VinylMapper: Symbol.for('VinylMapper'),
 
     // Services
     UserService: Symbol.for('UserService'),
@@ -23,6 +24,7 @@ const Types = {
     // Daos
     UserDao: Symbol.for('UserDao'),
     CollectionsDao: Symbol.for('CollectionsDao'),
+    WishlistDao: Symbol.for('WishlistDao'),
 
     // Utils
     SaltAndHash: Symbol.for('SaltAndHash'),

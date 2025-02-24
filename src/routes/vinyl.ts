@@ -26,4 +26,12 @@ router.get('/getRecommendations', (req, res) => {
     vinylController.getRecommendedAlbums(req, res);
 });
 
+router.get('/searchVinylWishlist', (req, res) => {
+    vinylController.searchVinylWishlist(req, res);
+});
+
+router.post('/saveVinylToWishlist', (req, res) => {
+    vinylController.saveToWishlist(req, res);
+});
+
 export = router;

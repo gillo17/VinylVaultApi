@@ -18,6 +18,8 @@ import { SpotifyMapper } from './mappers/spotifyMapper';
 import { OpenAIService } from './services/openAIService';
 import { VinylController } from './controllers/vinylController';
 import { VinylService } from './services/vinylService';
+import { VinylMapper } from './mappers/vinylMapper';
+import { WishlistDao } from './daos/wishlistDao';
 
 const container = new Container();
 
@@ -39,6 +41,10 @@ container.bind<CollectionsMapper>(Types.CollectionsMapper).to(CollectionsMapper)
 // Vinyl module
 container.bind<VinylController>(Types.VinylController).to(VinylController);
 container.bind<VinylService>(Types.VinylService).to(VinylService);
+container.bind<VinylMapper>(Types.VinylMapper).to(VinylMapper);
+
+// Wishlist module
+container.bind<WishlistDao>(Types.WishlistDao).to(WishlistDao);
 
 // AWS module
 container.bind<AwsService>(Types.AWSService).to(AwsService);
