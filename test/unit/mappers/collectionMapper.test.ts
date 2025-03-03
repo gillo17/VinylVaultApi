@@ -55,7 +55,10 @@ describe('Collection Mapper Tests', () => {
             const testRequest = {
                 body: {
                     VinylID: "1",
-                    collectionID: "1"
+                    collectionID: "1",
+                    user: {
+                        _id: "1"
+                    }
                 }
             }
             
@@ -63,6 +66,7 @@ describe('Collection Mapper Tests', () => {
 
             expect(viewCollection.collectionID).toBe(testRequest.body.collectionID);
             expect(viewCollection.spotifyAlbumID).toBe(testRequest.body.VinylID);
+            expect(viewCollection.userId).toBe(testRequest.body.user._id);
 
         });
     });

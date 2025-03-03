@@ -34,6 +34,40 @@ export class WishlistDao {
         }
     }
 
+    async searchAlbumInWishlist(userId: string, albumId: string): Promise<boolean> {
+        try {
+            const wishlist =  await Wishlist.findOne({ userId });
+            if (!wishlist) {
+                throw new Error("Error fetching wishlist");
+            }
+            for (const album of wishlist.albums) {
+                if (album.spotifyID === albumId) {
+                    return true;
+                }
+            }
+            return false;
+        } catch (error) {
+            throw new Error(error as string);
+        }
+    }
+
+    async removeAlbumfromWishlist(userId: string, albumId: string) {
+        try {
+            const wishlist =  await Wishlist.findOne({ userId });
+            if (!wishlist) {
+                throw new Error("Error fetching wishlist");
+            }
+            const albumIndex = wishlist.albums.findIndex(album => album.spotifyID === albumId);
+            if (albumIndex !== -1) {
+                wishlist.albums.splice(albumIndex, 1);
+                await wishlist.save();
+            }
+            return false;
+        } catch (error) {
+            throw new Error(error as string);
+        }
+    }
+
     async saveVinylToWishlist(albumInfo: spotifyAlbumData, wishlistId: string) {
         try {
             const wishlist = await Wishlist.findById(wishlistId);

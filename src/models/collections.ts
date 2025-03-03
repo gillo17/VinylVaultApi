@@ -21,6 +21,7 @@ export interface searchForVinylModel {
 export interface saveVinylToCollectionModel {
     spotifyAlbumID: string;
     collectionID: string;
+    userId: string;
 }
 
 export interface CollectionModel extends Document {}

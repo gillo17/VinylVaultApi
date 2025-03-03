@@ -38,7 +38,8 @@ export class CollectionsMapper {
 
         const data: saveVinylToCollectionModel = {
             spotifyAlbumID: req.body.VinylID,
-            collectionID: req.body.collectionID    
+            collectionID: req.body.collectionID,    
+            userId: req.body.user._id
         }
 
         return data;
