@@ -120,11 +120,8 @@ export class CollectionsController {
     ): Promise<Response> => {
         
         const collectionID = req.query.collectionID as string;
-        console.log(collectionID);
 
         const collection = await this.collectionService.getCollection(collectionID);
-
-        console.log(collection);
 
         if (collection) {
             return res.status(200).json(collection);
