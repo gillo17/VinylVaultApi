@@ -35,7 +35,6 @@ export class CollectionsDao {
             }
             return collection;
         } catch (error) {
-            console.log(error);
             throw new Error(error as string);
         }
     }

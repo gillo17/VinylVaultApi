@@ -49,8 +49,6 @@ export class SpotifyService {
 
         if (!t2Refresh || t2Refresh.getTime() <= Date.now() || !Token) {
 
-            Logging.info('Getting new spotify token')
-
             const headers = {
                 headers: {
                     Accept: 'application/json',
